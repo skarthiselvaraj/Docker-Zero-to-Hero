@@ -1,18 +1,15 @@
-FROM ubuntu
+FROM ubuntu:latest
 
-WORKDIR /app
+# Update package lists
+RUN apt-get update
 
-COPY requirements.txt /app
-COPY devops /app
+# Install Python and pip
+RUN apt-get install -y python3 python3-pip
 
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    pip install -r requirements.txt && \
-    cd devops
-
-ENTRYPOINT ["python3"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+# Install Python dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --break-system-packages -r /app/requirements.txt
 
 
-
-
+# Change directory to /devops
+WORKDIR /app/devops
